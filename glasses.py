@@ -4,7 +4,6 @@ init = (0) * 8
 print(init)
 
 
-
 #- main function
 def fill_glasses(desired_level, glasses_capacity):
     state_initial = (0,) * len(glasses_capacity)
@@ -45,13 +44,45 @@ def fill_glasses(desired_level, glasses_capacity):
                     queue.append(new_state)
                     print("empty glass. adding state to the queue: ", new_state)
 
-            # other_glasses
+            # pour from one glass to another
+            if state_current[i] > 0:
+
+                other_glasses = list(range(len(glasses_capacity)))
+                other_glasses.remove(i)
+                for j in other_glasses:
+                    if state_current[j] < glasses_capacity[j]:
+                        # print(state_current[i], glasses_capacity[i])
+
+                        # state_filled_copy = new_tuple.copy(state_filled)
+                        difference_newglass = glasses_capacity[j] - state_current[j]
+                        difference = min(state_current[i], difference_newglass)
+                        print("difference", difference)
+
+                        new_state = new_tuple(state_current, i, state_current[i]-difference)
+                        # print("pouring out ", new_state)
+                        new_state = new_tuple(new_state, j, state_current[j]+difference)
+                        # print("pouring in ", new_state)
+                        # print("new state", new_state)
+                        # state_filled_copy[i] = glasses_capacity[i]
+
+                        if new_state not in visited_states:
+                            queue.append(new_state)
+                            print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state)
+
+
+            
+                    # print(i, " ", other_glasses)
+    print(visited_states)
 
     if desired_level in visited_states:
         return 1
 
     else:
         return False
+
+#-
+
+
 
 #- Test 1
 test_capacity = (10,20)
@@ -60,7 +91,7 @@ test_desired = (0, 10)
 fill_glasses(test_desired, test_capacity)
 
 #- Test 1
-test_capacity = (10,20,40)
+test_capacity = (10, 20, 40)
 test_desired = (10, 10, 40)
 # glasses_filled = (0,1)
 fill_glasses(test_desired, test_capacity)
