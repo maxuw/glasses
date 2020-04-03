@@ -1,22 +1,32 @@
-## Initial file
+#- initial functions
+
+#- Tuple update
+def new_tuple(tuple_, i, change):
+    tpl = tuple_[:i] + (change,) + tuple_[i+1:]
+    return tpl
+
+# print(tpl)
 #-
-set1 = {((0), (1,2,3,4)), ((1), (2,3,4,5))}
 
-for set_ in set1:
-    print(set_[1])
+#- print content glasses
+def print_content_glasses(state_filled, desired_level, glasses_capacity):
+    return_string = ""
+    ch = 'A'
 
-print(set1)
 
-state_initial = (0, (0,) * 5)
-print(state_initial)
+    for i in range(len(glasses_capacity)):
+        return_string += ch + ": " + str(state_filled[i]) + "/" + str(desired_level[i]) + "/" + str(glasses_capacity[i]) + "  "
+        ch= chr(ord(ch) + 1)
+
+    print(return_string)
 #-
-init = (0, (0,) * 8)
-print(init)
+glasses_capacity = [10,20]
+desired_level = [5, 10]
+glasses_filled = [0,1]
+print_content_glasses(glasses_filled, desired_level, glasses_capacity)
 
-print(init[0])
-state_initial = (0, (0,) * 5)
 
-print(state_initial)
+
 
 #- main function
 def fill_glasses(desired_level, glasses_capacity):
@@ -100,8 +110,45 @@ def fill_glasses(desired_level, glasses_capacity):
     else:
         return False
 
+
 #-
 
+
+#-
+
+#- Reading standard in
+import sys
+lines = []
+
+for line in sys.stdin:
+    if 'Exit' == line.rstrip():
+        break
+    lines.append(line)
+    # print(f'Processing Message from sys.stdin *****{line}*****')
+    # dupa()
+
+    if len(lines) >= 3:
+
+        glasses_amount = int(lines[0])
+        glasses_capacity = tuple([int(i) for i in lines[1].split()])
+        glasses_desired = tuple([int(i) for i in lines[2].split()])
+        # tup_cut = tuple([int(i) for i in str_list[0].split()])
+
+
+        # print(glasses_capacity)
+        result = fill_glasses(glasses_desired, glasses_capacity)
+        print(result)
+        # print(type(lines[0]))        print(lines[0])
+        lines = []
+
+
+
+#-
+# 3
+# 12 8 3
+# 1 0 0
+print("dupa")
+#-
 
 
 #- Test 1
@@ -117,47 +164,16 @@ test_desired = (10, 30, 40)
 fill_glasses(test_desired, test_capacity)
 
 
-
-#- print content glasses
-def print_content_glasses(state_filled, desired_level, glasses_capacity):
-    return_string = ""
-    ch = 'A'
-
-
-    for i in range(len(glasses_capacity)):
-        return_string += ch + ": " + str(state_filled[i]) + "/" + str(desired_level[i]) + "/" + str(glasses_capacity[i]) + "  "
-        ch= chr(ord(ch) + 1)
-
-    print(return_string)
 #-
-glasses_capacity = [10,20]
-desired_level = [5, 10]
-glasses_filled = [0,1]
-print_content_glasses(glasses_filled, desired_level, glasses_capacity)
+str_list = []
+string1 = "1 2 3 4"
+str_list.append("1 2 3 4")
 
-#- Tuple update
-def new_tuple(tuple_, i, change):
-    tpl = tuple_[:i] + (change,) + tuple_[i+1:]
-    return tpl
+cut = string1.split()
+cut_int = [int(i) for i in string1.split()]
+tup_cut = tuple([int(i) for i in str_list[0].split()])
 
-
-
-#-
-#- Tuple update
-tuple_ = (0,0)
-tpl = tuple_[:0] + (5,) + tuple_[0+1:]
-
-print(tpl)
-#-
-
-print(new_tuple((0,0,0), 2, 3))
-
-#-
-t = (0,) * 8
-print(t)
-
-#-
-
-new_tuple((0,0), 0, 5)
-
+print("dupa")
+print(cut_int)
+print(tup_cut)
 #-
