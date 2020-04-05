@@ -1,48 +1,129 @@
-#- initial functions
+# - initial functions
 
-#- Tuple update
+
+# - function heuristic
+import numpy as np
+
+
+def heuristic(state, desired_capacity):
+    state_liquid = state[1]
+    des_cap_arr = np.array(desired_capacity)
+
+    state_arr = np.array(state_liquid)
+
+    diff = des_cap_arr - state_arr
+    absolute = np.absolute(diff)
+    sum_ = np.sum(absolute)
+
+    return sum_
+
+# -
+
+>> > h = []
+>> > heappush(h, (5, 'write code'))
+>> > heappush(h, (7, 'release product'))
+>> > heappush(h, (1, 'write spec'))
+>> > heappush(h, (3, 'create tests'))
+>> > heappop(h)
+(1, 'write spec')
+
+# -
+
+# heur1 = heuristic(list1, desired_capacity)
+# # 30
+# heur2 = heuristic(list2, desired_capacity)
+# # 4
+# heur3 = heuristic(list3, desired_capacity)
+# # 106
+# print(heur1)
+# print(heur2)
+# print(heur3)
+# print("dupa")
+
+# -
+
+import numpy as np
+
+desired_capacity = (0, 3, 5, 22)
+
+list1 = ((0), (0, 0, 0, 0))
+list2 = ((0), (0, 3, 3, 20))
+list3 = ((0), (31, 33, 35, 37))
+
+list1_ar = np.array(list1)
+list2_ar = np.array(list2)
+list3_ar = np.array(list3)
+
+desired_ar = np.array(desired_capacity)
+
+result1 = desired_ar - list1_ar
+result2 = desired_ar - list2_ar
+result3 = desired_ar - list3_ar
+
+abs_res1 = np.absolute(result1)
+abs_res2 = np.absolute(result2)
+abs_res3 = np.absolute(result3)
+
+sum_res1 = np.sum(abs_res1)
+sum_res2 = np.sum(abs_res2)
+sum_res3 = np.sum(abs_res3)
+
+print(sum_res1)
+print(sum_res2)
+print(sum_res3)
+
+
+# print(result1)
+
+
+# - Tuple update
 def new_tuple(tuple_, i, change):
-    tpl = tuple_[:i] + (change,) + tuple_[i+1:]
+    tpl = tuple_[:i] + (change,) + tuple_[i + 1:]
     return tpl
 
-# print(tpl)
-#-
 
-#- print content glasses
+# print(tpl)
+# -
+
+# - print content glasses
 def print_content_glasses(state_filled, desired_level, glasses_capacity):
     return_string = ""
     ch = 'A'
 
-
     for i in range(len(glasses_capacity)):
-        return_string += ch + ": " + str(state_filled[i]) + "/" + str(desired_level[i]) + "/" + str(glasses_capacity[i]) + "  "
-        ch= chr(ord(ch) + 1)
+        return_string += ch + ": " + str(state_filled[i]) + "/" + str(desired_level[i]) + "/" + str(
+            glasses_capacity[i]) + "  "
+        ch = chr(ord(ch) + 1)
 
     print(return_string)
-#-
-glasses_capacity = [10,20]
+
+
+# -
+glasses_capacity = [10, 20]
 desired_level = [5, 10]
-glasses_filled = [0,1]
+glasses_filled = [0, 1]
 print_content_glasses(glasses_filled, desired_level, glasses_capacity)
 
 
-
-
-#- main function
+# - main function
 def fill_glasses(desired_level, glasses_capacity):
     state_initial = (0, (0,) * len(glasses_capacity))
-    visited_states = set()
+    queued_states = set()
     level = 0
 
-    queue = [] # append() and pop(0)
-    queue.append(state_initial)
+    queue_heap = []  # append() and pop(0)
+    heappush(queue_heap, (0, state_initial)
+    queued_states.add(state_initial[1])
 
     while queue != []:
-        state_current = queue.pop(0)
-        visited_states.add(state_current[1])
+        state_current = heappop(queue_heap)
+        # visited_states.add(state_current[1])
 
         if state_current[0] > level:
             level = state_current[0]
+
+        if state_current[1] == desired_level:
+            return level
 
         print("visiting state: ", state_current[1], "level: ", state_current[0])
 
@@ -54,24 +135,30 @@ def fill_glasses(desired_level, glasses_capacity):
 
                 # state_filled_copy = new_tuple.copy(state_filled)
                 capacity = glasses_capacity[i]
-                new_state = (state_current[0]+1, new_tuple(state_current[1], i, capacity))
+                new_state = (state_current[0] + 1, new_tuple(state_current[1], i, capacity))
                 # print("new state", new_state)
                 # state_filled_copy[i] = glasses_capacity[i]
 
-                if new_state[1] not in visited_states:
+                if new_state[1] not in queued_states:
+
+
+                    heuristic(new_state)
+                    heappush(queue_heap)
                     queue.append(new_state)
+                    queued_states.add(new_state[1])
                     print("fill whole glass. adding state to the queue: ", new_state, "level: ", new_state[0])
 
             # empty glass
             if state_current[1][i] > 0:
                 # state_filled_copy = list.copy(state_filled)
-                new_state = (state_current[0]+1, new_tuple(state_current[1], i, 0))
+                new_state = (state_current[0] + 1, new_tuple(state_current[1], i, 0))
                 # print(new_state)
                 # state_filled_copy[i] = 0
 
-                if new_state[1] not in visited_states:
+                if new_state[1] not in queued_states:
                     queue.append(new_state)
-                    print("empty glass. adding state to the queue: ", new_state, "level: ", new_state[0])
+                    queued_states.add(new_state[1])
+                    print("emptying the glass. adding state to the queue: ", new_state, "level: ", new_state[0])
 
             # pour from one glass to another
             if state_current[1][i] > 0:
@@ -87,36 +174,40 @@ def fill_glasses(desired_level, glasses_capacity):
                         difference = min(state_current[1][i], difference_newglass)
                         # print("difference", difference)
 
-                        new_state = (state_current[0]+1, new_tuple(state_current[1], i, state_current[1][i]-difference))
+                        new_state = (
+                        state_current[0] + 1, new_tuple(state_current[1], i, state_current[1][i] - difference))
                         # print("pouring out ", new_state)
-                        new_state = (new_state[0], new_tuple(new_state[1], j, state_current[1][j]+difference))
+                        new_state = (new_state[0], new_tuple(new_state[1], j, state_current[1][j] + difference))
                         # print("pouring in ", new_state)
                         # print("new state", new_state)
                         # state_filled_copy[i] = glasses_capacity[i]
 
-                        if new_state[1] not in visited_states:
+                        if new_state[1] not in queued_states:
                             queue.append(new_state)
-                            print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state)
+                            queued_states.add(new_state[1])
+                            print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state,
+                                  "level: ", new_state[0])
 
-        if desired_level in visited_states:
-            return level
+        print("set queued states: ", len(queued_states))
+        print("queue lenght", len(queue))
 
-                    # print(i, " ", other_glasses)
-    print(visited_states)
-    if desired_level in visited_states:
+    print(desired_level)
+    print(queued_states)
+    if desired_level in queued_states:
         return level
 
     else:
         return -1
 
 
-#-
+# -
 
 
-#-
+# -
 
-#- Reading standard in
+# - Reading standard in
 import sys
+
 lines = []
 
 for line in sys.stdin:
@@ -127,12 +218,10 @@ for line in sys.stdin:
     # dupa()
 
     if len(lines) >= 3:
-
         glasses_amount = int(lines[0])
         glasses_capacity = tuple([int(i) for i in lines[1].split()])
         glasses_desired = tuple([int(i) for i in lines[2].split()])
         # tup_cut = tuple([int(i) for i in str_list[0].split()])
-
 
         # print(glasses_capacity)
         result = fill_glasses(glasses_desired, glasses_capacity)
@@ -140,18 +229,16 @@ for line in sys.stdin:
         # print(type(lines[0]))        print(lines[0])
         lines = []
 
-
-
-#-
+# -
 # 3
 # 12 8 3
 # 1 0 0
 print("dupa")
-#-
+# -
 
 
-#- Test 1
-test_capacity = (10,20)
+# - Test 1
+test_capacity = (10, 20)
 test_desired = (0, 10)
 
 # 2
@@ -159,21 +246,23 @@ test_desired = (0, 10)
 # glasses_filled = (0,1)
 fill_glasses(test_desired, test_capacity)
 
-#- Test 1
+# - Test 1
 test_capacity = (10, 40, 40)
 test_desired = (10, 30, 40)
 # glasses_filled = (0,1)
 fill_glasses(test_desired, test_capacity)
 
-#3
+# 3
 
-#- Test 3
+# - Test 3
 test_capacity = (31, 33, 35, 37)
 test_desired = (0, 3, 5, 22)
 # glasses_filled = (0,1)
 fill_glasses(test_desired, test_capacity)
 
-#-
+# 41 kroków
+
+# -
 str_list = []
 string1 = "1 2 3 4"
 str_list.append("1 2 3 4")
@@ -185,9 +274,7 @@ tup_cut = tuple([int(i) for i in str_list[0].split()])
 print("dupa")
 print(cut_int)
 print(tup_cut)
-#-
+# -
 
 
-
-
-#-
+# -

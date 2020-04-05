@@ -31,20 +31,26 @@ print_content_glasses(glasses_filled, desired_level, glasses_capacity)
 #- main function
 def fill_glasses(desired_level, glasses_capacity):
     state_initial = (0, (0,) * len(glasses_capacity))
-    visited_states = set()
+    queued_states = set()
     level = 0
+    visited_states = 0
 
     queue = [] # append() and pop(0)
     queue.append(state_initial)
+    queued_states.add(state_initial[1])
 
     while queue != []:
         state_current = queue.pop(0)
-        visited_states.add(state_current[1])
+        visited_states += 1
+        # visited_states.add(state_current[1])
 
         if state_current[0] > level:
             level = state_current[0]
 
-        print("visiting state: ", state_current[1], "level: ", state_current[0])
+        if state_current[1] == desired_level:
+            return level
+
+        # print("visiting state: ", state_current[1], "level: ", state_current[0])
 
         for i in range(len(glasses_capacity)):
 
@@ -58,9 +64,10 @@ def fill_glasses(desired_level, glasses_capacity):
                 # print("new state", new_state)
                 # state_filled_copy[i] = glasses_capacity[i]
 
-                if new_state[1] not in visited_states:
+                if new_state[1] not in queued_states:
                     queue.append(new_state)
-                    print("fill whole glass. adding state to the queue: ", new_state, "level: ", new_state[0])
+                    queued_states.add(new_state[1])
+                    # print("fill whole glass. adding state to the queue: ", new_state, "level: ", new_state[0])
 
             # empty glass
             if state_current[1][i] > 0:
@@ -69,9 +76,10 @@ def fill_glasses(desired_level, glasses_capacity):
                 # print(new_state)
                 # state_filled_copy[i] = 0
 
-                if new_state[1] not in visited_states:
+                if new_state[1] not in queued_states:
                     queue.append(new_state)
-                    print("empty glass. adding state to the queue: ", new_state, "level: ", new_state[0])
+                    queued_states.add(new_state[1])
+                    # print("emptying the glass. adding state to the queue: ", new_state, "level: ", new_state[0])
 
             # pour from one glass to another
             if state_current[1][i] > 0:
@@ -94,16 +102,23 @@ def fill_glasses(desired_level, glasses_capacity):
                         # print("new state", new_state)
                         # state_filled_copy[i] = glasses_capacity[i]
 
-                        if new_state[1] not in visited_states:
+                        if new_state[1] not in queued_states:
                             queue.append(new_state)
-                            print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state)
+                            queued_states.add(new_state[1])
+                            # print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state, "level: ", new_state[0])
 
-        if desired_level in visited_states:
-            return level
+
+        print("set queued states: ", len(queued_states))
+        print("queue lenght", len(queue))
+
+
+        # if desired_level in queued_states:
+        #     return level
 
                     # print(i, " ", other_glasses)
-    print(visited_states)
-    if desired_level in visited_states:
+    print(desired_level)
+    print(queued_states)
+    if desired_level in queued_states:
         return level
 
     else:
@@ -172,6 +187,8 @@ test_capacity = (31, 33, 35, 37)
 test_desired = (0, 3, 5, 22)
 # glasses_filled = (0,1)
 fill_glasses(test_desired, test_capacity)
+
+#41 kroków
 
 #-
 str_list = []

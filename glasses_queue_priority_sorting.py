@@ -95,8 +95,41 @@ def fill_glasses(desired_level, glasses_capacity):
                         # state_filled_copy[i] = glasses_capacity[i]
 
                         if new_state[1] not in visited_states:
+
                             queue.append(new_state)
                             print("pouring from glass ", i, "to glass ", j, ". adding state to the queue: ", new_state)
+
+        print("visited states: ", len(visited_states))
+        print("queue lenght", len(queue))
+
+
+
+            # Step 1
+        import pickle
+
+
+
+        if len(visited_states) == 4000:
+            # Step 1
+            import pickle
+
+
+
+            # Step 2
+
+            with open('list_visited_states', 'wb') as pickle_vis_states:
+
+                # Step 3
+                pickle.dump(visited_states, pickle_vis_states)
+
+            # Step 2
+
+            with open('list_queue', 'wb') as pickle_queue:
+
+                # Step 3
+                pickle.dump(queue, pickle_queue)
+
+
 
         if desired_level in visited_states:
             return level
